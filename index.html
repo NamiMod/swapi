@@ -1,0 +1,122 @@
+<!--swapi!-->
+<!--Web programming MidTerm project-->
+<!--Developer : Seyed Nami Modarressi-->
+<!--May - 2022-->
+<!--This is Home page of my website-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Swapi</title>
+    </head>
+    <body>
+        <!--In this css part I set a fixed image for background
+        if the screen is small, the image is fitted in best way
+        background image cover the entire background of website
+        i also set center as location of background image-->
+        <style type="text/css">
+            body{
+                background-image: url("image/BG.jpg");
+                min-height: 100%;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: center;
+                background-size: cover;
+            }
+        </style>
+        <!--In this css part I define property of recangle
+        height ans width of the box depend on context of it
+        i set a border for the rectangle (i set size and color for it)
+        then i set some property for text of it ( color , size , ...)
+        i also set padding to make it more beautiful
+        and finaly i set border-radius to curve the borders of it-->
+        <style>
+            .rectangle{
+            padding:50px;
+            width: fit-content;
+            height: fit-content;
+            border:2px solid rgb(0, 0, 0); 
+            text-align: left;
+            color: rgb(180, 0, 180);
+            font-size:x-large;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 25px;
+            border-collapse: separate;
+            border-spacing: 15px;
+            }
+        </style>
+
+        <!--create a table to show movies and link to spaceships-->
+        <table class="rectangle">
+            <tr>
+                <td>
+                    Movies :
+                </td>
+            </tr>
+        </table>
+        
+        <!--
+            in this javascript part i do some things :
+            1 - fetch data of movies from swapi
+            2 - parss data
+            3 - create new rows and colums for the table in order to show data
+            4 - add data of movies to cells of the table 
+            5 - make a link for each movie that forwards us to spaceships page
+        -->
+        <script type="text/javascript">
+            // get table
+            array = document.getElementsByClassName('rectangle');
+            async function loadData() {
+                const url = ["https://swapi.dev/api/films/4","https://swapi.dev/api/films/5","https://swapi.dev/api/films/6","https://swapi.dev/api/films/1","https://swapi.dev/api/films/2","https://swapi.dev/api/films/3"]
+                // this is for movies #4 , #5 , #6 
+                for (let i = 3 ; i <= 5 ; i++){
+                    // fetch data from swapi
+                    let response = await fetch(url[i]) 
+                    let data = await response.json();
+                    let parsed_data = JSON.parse(JSON.stringify(data))
+                    
+                    // create new rows ans cells to show data
+                    var row = array[0].insertRow();
+                    var cell0 = row.insertCell(0);
+                    var cell1 = row.insertCell(1);
+                    var cell2 = row.insertCell(2);
+                    var cell3 = row.insertCell(3);
+                    cell0.innerHTML = ". "+parsed_data.title;
+                    cell1.innerHTML = parsed_data.episode_id;
+                    cell2.innerHTML = parsed_data.release_date;
+                    var link_text = "Starship"
+                    var next_page = "starship"+(i+1).toString()+".html"
+                    // create link to forwards up to spaceships page
+                    cell3.innerHTML=  '<a href="'+next_page+'">'+link_text+'</a>';  
+                }
+                // this is for movies #1 , #2 , #3
+                for (let i = 0 ; i <= 2 ; i++){
+                    // fetch data from swapi
+                    let response = await fetch(url[i]) 
+                    let data = await response.json();
+                    let parsed_data = JSON.parse(JSON.stringify(data))
+
+                    // create new rows ans cells to show data
+                    var row = array[0].insertRow();
+                    var cell0 = row.insertCell(0);
+                    var cell1 = row.insertCell(1);
+                    var cell2 = row.insertCell(2);
+                    var cell3 = row.insertCell(3);
+
+                    cell0.innerHTML = ". "+parsed_data.title;
+                    cell1.innerHTML = parsed_data.episode_id;
+                    cell2.innerHTML = parsed_data.release_date;
+                    var link_text = "Starship"
+                    var next_page = "starship"+(i+1).toString()+".html"
+                    // create link to forwards up to spaceships page
+                    cell3.innerHTML=  '<a href="'+next_page+'">'+link_text+'</a>';  
+                }
+            }
+            // run function, get and show data of movies
+            loadData()    
+        </script>
+    </body>
+</html>

@@ -1,0 +1,214 @@
+<!--swapi!-->
+<!--Web programming MidTerm project-->
+<!--Developer : Seyed Nami Modarressi-->
+<!--May - 2022-->
+<!--this is a page for spaceships-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Swapi</title>
+    </head>
+    <body>
+        <!--In this css part I set a fixed image for background
+        if the screen is small, the image is fitted in best way
+        background image cover the entire background of website
+        i also set center as location of background image-->
+        <style type="text/css">
+            body{
+                background-image: url("image/BG.jpg");
+                min-height: 100%;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: center;
+                background-size: cover;
+            }
+        </style>
+        <!--In this css part I define property of recangle
+        height ans width of the box depend on context of it
+        i set a border for the rectangle (i set size and color for it)
+        then i set some property for text of it ( color , size , ...)
+        i also set padding to make it more beautiful
+        and finaly i set border-radius to curve the borders of it-->
+        <style>
+            .rectangle{
+            padding:50px;
+            width: fit-content;
+            height: fit-content;
+            border:2px solid rgb(0, 0, 0); 
+            text-align: left;
+            color: rgb(180, 0, 180);
+            font-size:x-large;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 25px;
+            border-collapse: separate;
+            border-spacing: 15px;
+            }
+        </style>
+        <!--create table to show data or list of spaceships-->
+        <table class="rectangle"></table>
+        <!--
+            in this javascript part i do some things :
+            1 - fetch data of spaceships from swapi
+            2 - parse data
+            3 - create table to show information of each spaceship
+            4 - add 4 buttons :
+                1 - go to data of previous spaceship
+                2 - go to data of next spaceship
+                3 - back to movies page
+                4 - see list of spaceships
+            if you press list of spaceships button the content of table is cleared and then you can  see list of spaceships
+            in you are in the list part there are two buttons :
+                1 - back to movies page
+                2 - back to information of spaceships page
+        -->
+        <script type="text/javascript">
+            // get table element
+            array = document.getElementsByClassName('rectangle');
+            // it shows the index of spaceship that we are reading data of
+            var spaceship_counter = 0;
+            var max_spaceships_index = 0;
+            var spaceships = [];
+            // now we should fetch data from swapi
+            async function loadData(index) {
+                const url = "https://swapi.dev/api/films/1" ;
+                let response = await fetch(url) 
+                let data = await response.json();
+                let parsed_data = JSON.parse(JSON.stringify(data))
+                spaceships = parsed_data.starships;
+                max_spaceships_index = spaceships.length;
+                
+                // get data of the [index] spaceship
+                let response_spaceship = await fetch(spaceships[index]) 
+                let data_spaceship = await response_spaceship.json();
+                let parsed_data_spaceship = JSON.parse(JSON.stringify(data_spaceship))
+                
+                // create row and cells to show data of spaceship
+                var row_title = array[0].insertRow();
+                var title1 = row_title.insertCell(0);
+                var title2 = row_title.insertCell(1);
+                title1.innerHTML = "Spaceship :" ;
+                title2.innerHTML = "Information" ; 
+                var row0 = array[0].insertRow();
+                var cell00 = row0.insertCell(0);
+                var cell01 = row0.insertCell(1);
+                cell00.innerHTML = parsed_data_spaceship.name;
+                cell01.innerHTML = parsed_data_spaceship.model;  
+                var row1 = array[0].insertRow();
+                var cell10 = row1.insertCell(0);
+                var cell11 = row1.insertCell(1);
+                cell10.innerHTML = " ";
+                cell11.innerHTML = parsed_data_spaceship.manufacturer; 
+                var row2 = array[0].insertRow();
+                var cell20 = row2.insertCell(0);
+                var cell21 = row2.insertCell(1);
+                cell20.innerHTML = " ";
+                cell21.innerHTML = parsed_data_spaceship.passengers; 
+                var row3 = array[0].insertRow();
+                var cell30 = row3.insertCell(0);
+                var cell31 = row3.insertCell(1);
+                cell30.innerHTML = " ";
+                cell31.innerHTML = parsed_data_spaceship.crew;
+                var films = parsed_data_spaceship.films
+                // we fetch again to get name of the movies
+                for (let i = 0 ; i < films.length;i++){
+                    let response_films = await fetch(films[i]) 
+                    let data_films = await response_films.json();
+                    let parsed_data_films = JSON.parse(JSON.stringify(data_films))
+                    let row = array[0].insertRow()
+                    var cell0 = row.insertCell(0);
+                    var cell1 = row.insertCell(1);
+                    // add movie name to table
+                    cell0.innerHTML = " ";
+                    cell1.innerHTML = parsed_data_films.title;
+                }
+                var row4 = array[0].insertRow();
+                // create button to go to previous spaceship
+                var cell40 = row4.insertCell(0);
+                cell40.innerHTML = '<input type="button" onclick="decrementValue()" value="privious spaceship" />';
+                // create button to go to next spaceship
+                var cell41 = row4.insertCell(1);    
+                cell41.innerHTML = '<input type="button" onclick="incrementValue()" value="next spaceship" />';  
+                // create button to go to home page
+                var row5 = array[0].insertRow();
+                var cell50 = row5.insertCell(0);
+                var cell51 = row5.insertCell(1);
+                var link_text = "Back to Movies"
+                var next_page = "index.html"
+                cell50.innerHTML=  '<a href="'+next_page+'">'+link_text+'</a>';
+                // show page number
+                cell51.innerHTML = "Page - " + (spaceship_counter+1);
+                // add button to show list of spaceships
+                var row6 = array[0].insertRow();
+                var cell60 = row6.insertCell(0);
+                cell51.innerHTML = '<input type="button" onclick="loadlist()" value="list of Spaceships" />';
+            }
+            loadData(0);
+            // this function increases spaceship_counter and then clears table and shows data of next spaceship
+            function incrementValue(){
+                if (spaceship_counter < max_spaceships_index-1){
+                    spaceship_counter+=1;
+                    var Table = document.getElementsByClassName("rectangle");
+                    var t = Table[0]
+                    t.innerHTML = "";
+                    loadData(spaceship_counter)
+                }
+            }
+            // this function decreases spaceship_counter and then clears table and shows data of next spaceship
+            function decrementValue(){
+                if (spaceship_counter > 0){
+                    spaceship_counter-=1;
+                    var Table = document.getElementsByClassName("rectangle");
+                    var t = Table[0]
+                    t.innerHTML = "";
+                    loadData(spaceship_counter)
+                }
+            }
+            // this function clears data of the table and shows list of spaceships 
+            async function loadlist(){
+                var Table = document.getElementsByClassName("rectangle");
+                var t = Table[0]
+                t.innerHTML = "";
+                array = document.getElementsByClassName('rectangle');
+                var spaceships = [];
+                
+                const url = "https://swapi.dev/api/films/1" ;
+                let response = await fetch(url) 
+                let data = await response.json();
+                let parsed_data = JSON.parse(JSON.stringify(data))
+                spaceships = parsed_data.starships;
+                
+                var row_title = array[0].insertRow();
+                var title1 = row_title.insertCell(0);
+                title1.innerHTML = "Spaceships :" ;
+                // get name of spaceships and add them to the table
+                for ( let i = 0 ; i < spaceships.length;i++){
+                    let response_spaceship = await fetch(spaceships[i]) 
+                    let data_spaceship = await response_spaceship.json();
+                    let parsed_data_spaceship = JSON.parse(JSON.stringify(data_spaceship))
+                    var row = array[0].insertRow();
+                    var cell = row.insertCell(0);  
+                    cell.innerHTML = parsed_data_spaceship.name;
+                }
+                // create row and cells to add buttons to back to movie pages or data page
+                var row4 = array[0].insertRow();
+                var cell40 = row4.insertCell(0);
+                cell40.innerHTML = '<input type="button" onclick="backtodata()" value="back to information of spaceships" />';
+                var cell41 = row4.insertCell(1);
+                var link_text = "Back to Movies"
+                var next_page = "index.html"
+                cell41.innerHTML=  '<a href="'+next_page+'">'+link_text+'</a>';  
+            }
+            // this function clears the table and shows information of spaceships
+            function backtodata(){
+            var Table = document.getElementsByClassName("rectangle");
+            var t = Table[0]
+            t.innerHTML = "";
+            loadData(spaceship_counter)
+            }
+        </script>
+    </body>
+</html>
