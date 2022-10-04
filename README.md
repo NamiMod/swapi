@@ -1,5 +1,5 @@
 # swapi
-A simple page that gets data about star wars movies using Swapi API
+A simple and not beautiful 😅 web page that gets data about star wars movies using Swapi API
 
 In this page you can see some Information about star wars movies. Cool 😎 
 
