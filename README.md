@@ -1,6 +1,6 @@
 # swapi
 A simple and not beautiful 😅 web page that gets data about star wars movies using Swapi API
 
-In this page you can see some Information about star wars movies. Cool 😎 
+On this page, you can see some information about star wars movies. Cool 😎 
 
 Visit namimod.github.io/swapi/ to see the page.
